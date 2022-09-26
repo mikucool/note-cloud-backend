@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 @RestController
@@ -31,8 +32,12 @@ public class UserController {
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    private ApiResult<String> login(@Valid @RequestBody LoginDTO dto) {
-        return ApiResult.success("login successfully");
+    private ApiResult<String> login(@Valid @RequestBody LoginDTO dto, HttpSession session) {
+        String token = userService.executeLogin(dto, session);
+        if (ObjectUtils.isEmpty(token)) {
+            return ApiResult.failed("error password");
+        }
+        return ApiResult.success(token);
     }
 
     @RequestMapping("/test")

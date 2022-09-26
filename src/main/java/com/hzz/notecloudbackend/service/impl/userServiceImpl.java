@@ -1,15 +1,19 @@
 package com.hzz.notecloudbackend.service.impl;
 
+import cn.hutool.core.lang.UUID;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hzz.notecloudbackend.common.exception.ApiAsserts;
 import com.hzz.notecloudbackend.mapper.UserMapper;
+import com.hzz.notecloudbackend.model.dto.LoginDTO;
 import com.hzz.notecloudbackend.model.dto.RegisterDTO;
 import com.hzz.notecloudbackend.model.entity.User;
 import com.hzz.notecloudbackend.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import javax.servlet.http.HttpSession;
 
 @Slf4j
 @Service
@@ -32,5 +36,24 @@ public class userServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         baseMapper.insert(addUser);
 
         return addUser;
+    }
+
+    @Override
+    public String executeLogin(LoginDTO dto, HttpSession session) {
+        LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(User::getUsername, dto.getUsername());
+        User user = baseMapper.selectOne(wrapper);
+        System.out.println(user);
+        try {
+            if (!dto.getPassword().equals(user.getPassword())) {
+                throw new Exception("error password");
+            }
+        } catch (Exception e) {
+            log.warn("user is not exist or error password =======>{}", dto.getUsername());
+        }
+        String token = UUID.randomUUID().toString(true);
+        session.setAttribute(token, user);
+        System.out.println(token);
+        return token;
     }
 }
