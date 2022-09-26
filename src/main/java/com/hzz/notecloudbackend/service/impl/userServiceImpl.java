@@ -43,17 +43,18 @@ public class userServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(User::getUsername, dto.getUsername());
         User user = baseMapper.selectOne(wrapper);
-        System.out.println(user);
+        System.out.println(user.getPassword());
+        System.out.println(dto.getPassword());
         try {
             if (!dto.getPassword().equals(user.getPassword())) {
                 throw new Exception("error password");
             }
         } catch (Exception e) {
             log.warn("user is not exist or error password =======>{}", dto.getUsername());
+            ApiAsserts.fail("expected");
         }
         String token = UUID.randomUUID().toString(true);
         session.setAttribute(token, user);
-        System.out.println(token);
-        return token;
+            return token;
     }
 }

@@ -6,10 +6,7 @@ import com.hzz.notecloudbackend.model.dto.RegisterDTO;
 import com.hzz.notecloudbackend.model.entity.User;
 import com.hzz.notecloudbackend.service.UserService;
 import org.springframework.util.ObjectUtils;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
@@ -38,6 +35,11 @@ public class UserController {
             return ApiResult.failed("error password");
         }
         return ApiResult.success(token);
+    }
+
+    @RequestMapping("/logout")
+    private ApiResult<String> logout(HttpSession session) {
+        return ApiResult.success("logout successfully");
     }
 
     @RequestMapping("/test")
