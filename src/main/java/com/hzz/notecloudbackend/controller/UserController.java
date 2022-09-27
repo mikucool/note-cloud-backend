@@ -38,14 +38,18 @@ public class UserController {
     }
 
     @RequestMapping("/logout")
-    private ApiResult<String> logout(HttpSession session) {
+    private ApiResult<String> logout(@RequestParam String token, HttpSession session) {
+        System.out.println(session.getAttribute(token));
+        if (!ObjectUtils.isEmpty(session.getAttribute(token))) {
+            session.removeAttribute(token);
+        }
         return ApiResult.success("logout successfully");
     }
 
     @RequestMapping("/test")
-    public ApiResult<Object> test() {
-        User user = new User();
-        user.setPassword("1234");
-        return ApiResult.success(user);
+    public ApiResult<Object> test(@RequestParam String token, HttpSession session) {
+        System.out.println(token);
+        System.out.println(session.getAttribute(token));
+        return ApiResult.success("test");
     }
 }

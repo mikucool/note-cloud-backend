@@ -55,6 +55,6 @@ public class userServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         }
         String token = UUID.randomUUID().toString(true);
         session.setAttribute(token, user);
-            return token;
+        return token;
     }
 }
