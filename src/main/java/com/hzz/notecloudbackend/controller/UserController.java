@@ -39,7 +39,6 @@ public class UserController {
 
     @RequestMapping("/logout")
     private ApiResult<String> logout(@RequestParam String token, HttpSession session) {
-        System.out.println(session.getAttribute(token));
         if (!ObjectUtils.isEmpty(session.getAttribute(token))) {
             session.removeAttribute(token);
         }
